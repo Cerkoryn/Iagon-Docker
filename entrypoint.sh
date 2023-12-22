@@ -3,6 +3,16 @@
 # Define the configuration file or directory
 CONFIG_DIR="/root/iagon-node"
 
+# Function to perform cleanup and stop the service
+graceful_shutdown() {
+  echo "Stopping Iagon Storage Node..."
+  ./iag-cli-linux stop
+  exit
+}
+
+# Trap TERM signal and call graceful_shutdown
+trap 'graceful_shutdown' SIGTERM
+
 # Check if configuration exists
 if [ -d "$CONFIG_DIR" ] && [ "$(ls -A $CONFIG_DIR)" ]; then
   echo "Configuration found. Starting service..."
@@ -26,4 +36,6 @@ else
 fi
 
 # Keep container running
-tail -f /dev/null
+while true; do
+  tail -f /dev/null & wait ${!}
+done
