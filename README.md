@@ -2,6 +2,9 @@
 
 This document provides instructions for setting up and running the Iagon storage node service in a Docker container.
 
+### \*\*\*NOTE\*\*\*
+The initial setup is not currently automated.   For the time being you will have to exec into the Docker container, finish setup manually, and then copy out your authorization key.  Additionally, it is recommended to copy out the `~/iagon-node` folder into a backup folder.  These steps are detailed below.
+
 ## Prerequisites
 
 Before you begin, ensure you have Docker Engine and a folder for storing Iagon data.
@@ -19,28 +22,28 @@ Before building and running the container, decide on the following configuration
 
 1. Clone the repository or download the Dockerfile and entrypoint script:
 
-   ```bash
+```
    git clone [repository-url]
    cd [repository-directory]
-   ```
+```
 
 2. Build the docker image:
 
-   ```bash
+```
    docker build -t iagon-service .
-   ```
+```
 
 3. Run the container using the following command, replacing /path/to/external/storage with the actual path to your designated external storage on the host system:
 
-   ```bash
+```
    docker run -d \
   -p 1024:1024 \
   --name iagon-provider-node \
   -v iagon-data:/root/iagon-node \
   -v /path/to/storage/folder:/mnt/iagon-storage \
-  -v /path/to/host/config-backup:/backup \
+  -v /path/to/host/backup:/mnt/backup \
   iagon-service
-   ```
+```
 
 ## Persisting Data
 
@@ -56,25 +59,49 @@ To update the service to the latest version, you'll need to rebuild the Docker i
 
 1. Stop and remove the existing container:
 
-   ```bash
+```
    docker stop iagon-provider-node
    docker rm iagon-provider-node
-   ```
+```
 
 2. Rebuild the image (this will fetch the latest release):
 
-   ```bash
+```
    docker build -t iagon-service .
-   ```
+```
 
 3. Run the new container as described in previous steps.
 
-## Extracting the authorization
+## Extracting the authorization \*NOT CURRENTLY WORKING\*
 
 1. View the logs for the node and read the authorization key:
 
-   ```bash
+```
    docker logs iagon-provider-node
-   ```
+```
 
 2. Additionally, these logs can be used for troubleshooting issues.
+
+## \*WORKAROUND\* Finishing setup manually:
+
+1. Exec into the container using the below command: 
+   
+   ```
+   docker exec -it iagon-provider-node /bin/bash
+   ```
+
+2. Once inside the container, from the /opt/Iagon directory run:
+
+   ```
+   ./iag-cli-linux start
+   ```
+
+3. Finish the interactive setup and copy->paste the authorization key to your host computer when finished.
+
+4. Finally, run the following command to copy the configration out of your Docker container into a backup folder:
+
+   ```
+   cp -R /root/iagon-node /mnt/backup
+   ```
+   
+   The configuration info will also be persisted inside the `iagon-data` Docker volume we created when running the container.  This should load automatically when you restart the container with the same command.  If not, you can copy the backup in manually.
