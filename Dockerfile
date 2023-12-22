@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 # ************CHANGE BELOW IF NEEDED************
 ENV IAGON_STORAGE_PATH=/mnt/iagon-storage
-ENV IAGON_STORAGE_SIZE=10
+ENV IAGON_STORAGE_SIZE=1024
 ENV IAGON_SERVER_PORT=1024
 # ************CHANGE ABOVE IF NEEDED************
 
@@ -15,7 +15,7 @@ RUN apt-get update -y && apt-get install -y wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Download the latest iag-cli-linux release
-RUN wget $(wget -qO- https://api.github.com/repos/Iagonorg/iagon-storage-node-cli/releases/latest | grep browser_download_url | grep 'iag-cli-linux' | cut -d '"' -f 4) -O iag-cli-linux
+RUN wget $(wget -qO- https://api.github.com/repos/Iagonorg/mainnet-node-cli/releases/latest | grep browser_download_url | grep 'iag-cli-linux' | cut -d '"' -f 4) -O iag-cli-linux
 
 # Set permissions to execute the script
 RUN chmod +rwx iag-cli-linux
