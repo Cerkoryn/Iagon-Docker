@@ -1,2 +1,3 @@
-# Ignore the contents of the backup directory
+# Ignore the contents of the backup and iagon-storage directories
 backup/*
+iagon-storage/*

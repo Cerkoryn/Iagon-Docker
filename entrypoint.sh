@@ -32,7 +32,6 @@ elif [ ! -d "$CONFIG_DIR" ]; then
   fi
 else
   echo "An error occurred trying to read $CONFIG_DIR."
-fi
 
 # ***TODO: UNFORTUNATELY IT SEEMS TO GET STUCK HERE.  HOW TO FIX?***
 #  echo "No configuration found. Initializing service..."

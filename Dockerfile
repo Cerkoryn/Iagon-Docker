@@ -11,7 +11,7 @@ RUN mkdir -p /opt/Iagon
 WORKDIR /opt/Iagon
 
 # Install wget and remove bloat
-RUN apt-get update -y && apt-get install -y wget \
+RUN apt update -y && apt install -y wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Download the latest iag-cli-linux release
@@ -21,7 +21,7 @@ RUN wget $(wget -qO- https://api.github.com/repos/Iagonorg/mainnet-node-cli/rele
 RUN chmod +rwx iag-cli-linux
 
 # Add the entrypoint script
-COPY ./entrypoint.sh /opt/Iagon
+COPY ./entrypoint.sh /opt/Iagon/
 RUN chmod +x /opt/Iagon/entrypoint.sh
 
 # Persist configuration data
