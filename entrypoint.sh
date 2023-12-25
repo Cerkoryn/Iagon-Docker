@@ -13,14 +13,26 @@ graceful_shutdown() {
 # Trap TERM signal and call graceful_shutdown
 trap 'graceful_shutdown' SIGTERM
 
-# Check if configuration exists
-if [ -d "$CONFIG_DIR" ] && [ "$(ls -A $CONFIG_DIR)" ]; then
-  echo "Configuration found. Starting service..."
-  # Command to start service using existing configuration
-  ./iag-cli-linux start
+if [ -d "$CONFIG_DIR" ]; then
+  if [ "$(ls -A $CONFIG_DIR)" ]; then
+    echo "Configuration found. Starting service..."
+    ./iag-cli-linux start
+  elif [ "$(ls -A $CONFIG_DIR)" == "" ] && [ -d "/mnt/backup/iagon-node" ] && [ "$(ls -A /mnt/backup/iagon-node)" ]; then
+    echo "Configuration directory is empty. Restoring from backup..."
+    cp -R /mnt/backup/iagon-node/* $CONFIG_DIR
+  fi
+elif [ ! -d "$CONFIG_DIR" ]; then
+  if [ -d "/mnt/backup/iagon-node" ] && [ "$(ls -A /mnt/backup/iagon-node)" ]; then
+    echo "No configuration directory found. Creating directory and restoring from backup..."
+    mkdir -p $CONFIG_DIR
+    cp -R /mnt/backup/iagon-node/* $CONFIG_DIR
+  else
+    echo "No configuration found. Please initialize the configuration manually using the following command:"
+    echo "docker exec -it iagon-provider-node /bin/bash"
+  fi
 else
-  echo "No configuration found. Please initialize the configuration manually using the following command:"
-  echo "docker exec -it iagon-provider-node /bin/bash"
+  echo "An error occurred trying to read $CONFIG_DIR."
+fi
 
 # ***TODO: UNFORTUNATELY IT SEEMS TO GET STUCK HERE.  HOW TO FIX?***
 #  echo "No configuration found. Initializing service..."
