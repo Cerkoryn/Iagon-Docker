@@ -20,12 +20,14 @@ if [ -d "$CONFIG_DIR" ]; then
   elif [ "$(ls -A $CONFIG_DIR)" == "" ] && [ -d "/mnt/backup/iagon-node" ] && [ "$(ls -A /mnt/backup/iagon-node)" ]; then
     echo "Configuration directory is empty. Restoring from backup..."
     cp -R /mnt/backup/iagon-node/* $CONFIG_DIR
+    ./iag-cli-linux start
   fi
 elif [ ! -d "$CONFIG_DIR" ]; then
   if [ -d "/mnt/backup/iagon-node" ] && [ "$(ls -A /mnt/backup/iagon-node)" ]; then
     echo "No configuration directory found. Creating directory and restoring from backup..."
     mkdir -p $CONFIG_DIR
     cp -R /mnt/backup/iagon-node/* $CONFIG_DIR
+    ./iag-cli-linux start
   else
     echo "No configuration found. Please initialize the configuration manually using the following command:"
     echo "docker exec -it iagon-provider-node /bin/bash"
