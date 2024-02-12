@@ -8,6 +8,7 @@ ENV IAGON_SERVER_PORT=1024
 
 # Create a directory for Iagon
 RUN mkdir -p /opt/Iagon
+RUN mkdir /root/iagon-node-logs
 WORKDIR /opt/Iagon
 
 # Install wget and remove bloat
