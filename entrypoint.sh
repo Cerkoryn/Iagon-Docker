@@ -49,7 +49,7 @@ else
 #cp -R /root/iagon-node /mnt/backup/
 fi
 
-# Keep container running
+# Keep service
 while true; do
     STATUS_OUTPUT=$($IAG_CLI get:status 2>&1)
     if echo "$STATUS_OUTPUT" | grep -q "Node is not running"; then
